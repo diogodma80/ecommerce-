@@ -11,12 +11,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(name="product_category")
-// @Data - known bug with Lombok when using @OneToMany
+@Data
+//- known bug with Lombok when using @OneToMany
 @Getter
 @Setter
 public class ProductCategory {
