@@ -25,6 +25,16 @@ export class ProductService {
     return this.getProducts(searchUrl);
   }
 
+  getProductListPaginate(thePage: number, 
+                        thePageSize: number, 
+                        theCategoryId: number): Observable<GetResponseProducts> {
+
+    // build url based on the category id, page and size
+    const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}&page=${thePage}&size=${thePageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
+
   // service method called from ProductCategoryMenuComponent
   getProductCategories(): Observable<ProductCategory[]> { 
     return this.httpClient.get<GetResponseProductCategory>(this.categoryUrl).pipe(
@@ -53,12 +63,30 @@ export class ProductService {
 
     return this.httpClient.get<Product>(productUrl);
   }
+
+  searchProductListPaginate(thePage: number, 
+                            thePageSize: number, 
+                            theKeyword: string): Observable<GetResponseProducts> {
+
+  // build url based on the keyword, page and size
+  const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${theKeyword}`
+                    +`&page=${thePage}&size=${thePageSize}`;
+
+  return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
 }
 
 // interfaces to unwrap the JSON from Spring Data REST _embedded entry
 interface GetResponseProducts {
   _embedded: {
     products: Product[];
+  },
+  // support for pagination
+  page: {
+    size: number,
+    totlElements: number,
+    totalPages: number,
+    number: number
   }
 }
 
