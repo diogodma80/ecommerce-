@@ -9,7 +9,7 @@ export class CartService {
 
   cartItems: CartItem[] = [];
 
-  // Subject is a subclass of Observable. It allows to publich events in the code and sent them to all subscribers
+  // Subject is a subclass of Observable. It allows to publish events in the code and send them to all subscribers
   totalPrice: Subject<number> = new Subject<number>();
   totalQuantity: Subject<number> = new Subject<number>();
 
@@ -22,12 +22,8 @@ export class CartService {
 
     if(this.cartItems.length > 0) {
       // find the item in the cart based on the item id
-      for(let tempCartItem of this.cartItems) {
-        if(tempCartItem.id === theCartItem.id) {
-          existingCartItem = tempCartItem;
-          break;
-        }
-      }
+      //find will return the first element that passes. Otherwise it returns undefined
+      existingCartItem = this.cartItems.find(tempCartItem => tempCartItem.id === theCartItem.id);
 
       // check if there item is found
       alreadyExistsInCart = (existingCartItem != undefined);
@@ -54,15 +50,15 @@ export class CartService {
       totalQuantityValue += currentCartItem.quantity;
     }
 
-    // public the new values ... all subscribers will receive the new data
+    // publish the new values ... all subscribers will receive the new data
     this.totalPrice.next(totalPriceValue);
-    this.totalQuantity.next(totalPriceValue);
+    this.totalQuantity.next(totalQuantityValue);
 
     // log cart data just for debugging
-    this.logCartData(totalPriceValue, this.totalQuantity);
+    this.logCartData(totalPriceValue, totalQuantityValue);
   }
 
-  logCartData(totalPriceValue: number, totalQuantityValue: Subject<number>) {
+  logCartData(totalPriceValue: number, totalQuantityValue: number) {
     console.log(`Contents of the cart`);
     for(let tempCartItem of this.cartItems) {
       const subTotalPrice = tempCartItem.quantity * tempCartItem.unitPrice;
